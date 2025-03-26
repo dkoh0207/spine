@@ -321,7 +321,7 @@ def compute_axial_pearsonr(shower_p, refpoint, use_direction=False):
     if len(shower_p.points) < 3:
         return -np.inf
     
-    startpoint = refpoint\
+    startpoint = refpoint
     
     if use_direction:
         v0 = shower_p.start_dir
