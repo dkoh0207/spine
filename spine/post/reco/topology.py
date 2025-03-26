@@ -249,7 +249,7 @@ class ParticleSpreadProcessor(PostBase):
     aliases = ('particle_spread',)
     
     def __init__(self, threshold=0.043, length_scale=14.0, 
-                 refvox_mode='vertex'):
+                 refvox_mode='vertex', use_direction=False):
         """Specify the EM shower spread threshold.
 
         Parameters
@@ -264,6 +264,7 @@ class ParticleSpreadProcessor(PostBase):
         self.threshold = threshold
         self.length_scale = length_scale
         self.refvox_mode = refvox_mode
+        self.use_direction = use_direction
         
     def process(self, data):
         """Compute the shower spread and modify the PID if inplace=True.
@@ -285,20 +286,22 @@ class ParticleSpreadProcessor(PostBase):
                         p.directional_spread = compute_particle_spread(p.points,
                                                                     ia.vertex,
                                                                     l=self.length_scale)
-                        p.axial_spread = compute_axial_pearsonr(p, ia.vertex)
+                        p.axial_spread = compute_axial_pearsonr(p, ia.vertex, 
+                                                                use_direction=self.use_direction)
                     
                     elif self.refvox_mode == 'startpoint':
                         
                         p.directional_spread = compute_particle_spread(p.points,
                                                                     p.start_point,
                                                                     l=self.length_scale)
-                        p.axial_spread = compute_axial_pearsonr(p, p.start_point)
+                        p.axial_spread = compute_axial_pearsonr(p, p.start_point, 
+                                                                use_direction=self.use_direction)
                         
                     else:
                         raise ValueError('Invalid reference voxel mode')
     
     
-def compute_axial_pearsonr(shower_p, refpoint):
+def compute_axial_pearsonr(shower_p, refpoint, use_direction=False):
     """Compute the pearson R correlation coefficient between the
     distance of the shower points from the startpoint along the shower
     axis and the perpendicular distance from the shower axis.
@@ -318,8 +321,17 @@ def compute_axial_pearsonr(shower_p, refpoint):
     if len(shower_p.points) < 3:
         return -np.inf
     
-    startpoint = refpoint
-    v0 = shower_p.start_dir
+    startpoint = refpoint\
+    
+    if use_direction:
+        v0 = shower_p.start_dir
+    else:
+        v_ref = shower_p.start_dir
+        pca = PCA(n_components=3)
+        pca.fit(shower_p.points)
+        v0 = pca.components_[0]
+        if np.dot(v_ref, v0) < 0:
+            v0 *= -1
     
     dists = np.linalg.norm(shower_p.points - startpoint, axis=1)
     v = (startpoint - shower_p.points) - np.sum((startpoint - shower_p.points) * v0, axis=1, keepdims=True) \
