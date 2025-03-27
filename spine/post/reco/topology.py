@@ -415,17 +415,17 @@ class ParticleTrunkStraightnessProcessor(PostBase):
                 
                 if p.is_primary:
                     
-                    p.trunk_straightness = compute_trunk_straightness(p,
+                    p.start_straightness = compute_start_straightness(p,
                                                                       r=self.r,
                                                                       n_components=self.n_components)
                         
                     if self.inplace:
-                        if p.trunk_straightness < self.threshold:
+                        if p.start_straightness < self.threshold:
                             p.is_valid = False
                             p.is_primary = False
                     
                 
-def compute_trunk_straightness(shower_p, r=3.0, n_components=3):
+def compute_start_straightness(shower_p, r=3.0, n_components=3):
     """Helper function to compute the validity of the shower trunk
     by computing the PCA principal explained variance ratio. 
 

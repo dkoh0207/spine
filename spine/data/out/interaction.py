@@ -284,7 +284,7 @@ class RecoInteraction(InteractionBase, RecoBase):
     leading_shower_axial_spread: float = None
     leading_shower_directional_spread: float = None
     leading_shower_start_dedx: float = None
-    leading_shower_trunk_straightness: float = None
+    leading_shower_start_straightness: float = None
     leading_shower_adjacent_bragg_pearsonr: float = None
     leading_shower_split_angle: float = None
 
@@ -395,7 +395,7 @@ class RecoInteraction(InteractionBase, RecoBase):
         pass
     
     @property
-    def leading_shower_trunk_straightness(self):
+    def leading_shower_start_straightness(self):
         """Measure of how straight the trunk of the leading shower is.
 
         Returns
@@ -406,10 +406,10 @@ class RecoInteraction(InteractionBase, RecoBase):
         leading_shower = self.leading_shower
         if leading_shower is None:
             return -1.
-        return leading_shower.trunk_straightness
+        return leading_shower.start_straightness
     
-    @leading_shower_trunk_straightness.setter
-    def leading_shower_trunk_straightness(self, leading_shower_trunk_straightness):
+    @leading_shower_start_straightness.setter
+    def leading_shower_start_straightness(self, leading_shower_start_straightness):
         pass
     
     @property

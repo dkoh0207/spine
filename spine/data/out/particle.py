@@ -239,7 +239,7 @@ class RecoParticle(ParticleBase, RecoBase):
     split_angle: float = -1.
     directional_spread: float = -1.
     axial_spread: float = -np.inf
-    trunk_straightness: float = -1.
+    start_straightness: float = -1.
     start_dedx: float = -1.
     adjacent_bragg_pearsonr: float = -np.inf
 
