@@ -454,6 +454,24 @@ class RecoInteraction(InteractionBase, RecoBase):
     @leading_shower_split_angle.setter
     def leading_shower_split_angle(self, leading_shower_split_angle):
         pass
+    
+    @property
+    def leading_shower_vertex_distance(self):
+        """Angle between the two branches of the leading shower.
+
+        Returns
+        -------
+        float
+            Angle between the two branches of the leading shower
+        """
+        leading_shower = self.leading_shower
+        if leading_shower is None:
+            return -1.
+        return leading_shower.vertex_distance
+    
+    @leading_shower_vertex_distance.setter
+    def leading_shower_vertex_distance(self, leading_shower_vertex_distance):
+        pass
 
 @dataclass(eq=False)
 @inherit_docstring(TruthBase, InteractionBase)
